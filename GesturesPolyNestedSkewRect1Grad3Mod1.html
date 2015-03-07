@@ -1,0 +1,105 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<polymer-element name="svg-graphics" attributes="width height">
+ <template>
+   <style>
+     :host { display:block; }
+     .slice { } 
+   </style>
+
+   <svg id="svg" width="{{width}}" height="{{height}}"> 
+      <template repeat="{{shape in shapes}}">
+        <rect x="{{shape.x}}"      y="{{shape.y}}" 
+              width="{{shape.rw}}" height="{{shape.rh}}" 
+              transform="{{shape.tr}}"
+              style="fill:{{shape.fill}}"/> 
+      </template>
+    </svg>
+  </template>
+
+  <script>
+     (function() {
+       Polymer('svg-graphics',{
+         updateGraphics: function(e){
+            e.currentTarget.attributes.x.value = "300";
+            e.currentTarget.attributes.y.value = "300";
+
+            this.scale += this.dirScale*this.deltaScale;
+            if(this.scale < this.minScale) { 
+               this.scale = this.minScale;
+               this.dirScale *= -1;
+            }
+ 
+            if(this.scale > this.maxScale) { 
+               this.scale = this.maxScale;
+               this.dirScale *= -1;
+            }
+
+            e.currentTarget.attributes.transform.value = "scale("+this.scale+")";
+         },
+         scale: 0.0,
+         minScale: 0.0,
+         maxScale: 2.0,
+         deltaScale: 0.1,
+         dirScale: 1,
+         colors : null,
+         shapes : null,
+         observe : {
+           width : 'render'
+         },
+         getShapes : function() {
+         var basePointX  = 300, basePointY  = 20;
+         var currentX    = 0,   currentY    = 0;
+         var rectWidth   = 400, rectHeight  = 400;
+         var moduloWidth = 50,  moduloCount = 0;
+         var color       = "",  shapes      = [];
+         var stripCount  = 10,  stripWidth  = 0;
+         var currStrip   = 0,   transform   = "";
+
+         var rVal       = 0.0; 
+         var gVal       = 0.0; 
+         var bVal       = 0.0; 
+       
+         stripWidth  = Math.floor(rectWidth/stripCount); 
+         moduloCount = Math.floor(rectWidth/moduloWidth); 
+
+         for(var x=0; x<rectWidth; x++) {
+           currentX = basePointX+x;
+           currentY = basePointY+x;
+          
+           transform = "skewX("+(-x%50)+")";
+
+           rVal = 0.0; gVal = 0.0; bVal = 0.0; 
+       
+           currStrip = Math.floor(x/stripWidth);
+           if(currStrip % 4 == 0) {
+              rVal = Math.floor(255*(x % stripWidth)/stripWidth);
+           } 
+           else if(currStrip % 4 == 1) {
+              rVal = Math.floor(255*(x % stripWidth)/stripWidth);
+              gVal = Math.floor(255*(x % stripWidth)/stripWidth);
+           } 
+           else if(currStrip % 4 == 2) {
+              gVal = 255-Math.floor(255*(x % stripWidth)/stripWidth);
+           } 
+           else {
+              bVal = 255-Math.floor(255*(x % stripWidth)/stripWidth);
+           } 
+   
+           var color = "rgb("+rVal+","+gVal+","+bVal+")";
+
+           shapes.push({x:currentX,       y:currentY, 
+                      //rw:rectWidth-0*x, rh:rectWidth-0*x, 
+                        rw:3*(x%moduloWidth), rh:3*(x%moduloWidth), 
+                        tr:transform, fill:color});
+           }
+
+           return shapes;
+         },
+         render : function() {
+           this.shapes = this.getShapes();
+         }
+     })
+   })();
+</script>
+
