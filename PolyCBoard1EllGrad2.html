@@ -1,0 +1,56 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<polymer-element name="svg-graphics" attributes="width height">
+ <template>
+   <style>
+     :host { display:block; }
+     .slice { } 
+   </style>
+
+   <svg id="svg" width="{{width}}" height="{{height}}"> 
+      <template repeat="{{shape in shapes}}">
+        <ellipse cx="{{shape.cx}}" cy="{{shape.cy}}" 
+                 rx="{{shape.rx}}" ry="{{shape.ry}}" 
+              style="fill:{{shape.fill}}"/>
+      </template>
+    </svg>
+  </template>
+
+  <script>
+     (function() {
+       Polymer('svg-graphics',{
+         colors : null,
+         shapes : null,
+         observe : {
+           width : 'render'
+         },
+         getShapes : function() {
+           var basePointX  = 50,  basePointY = 50;
+           var currentX    = 0,   currentY   = 0;
+           var rectWidth   = 40,  rectHeight = 40;
+           var rowCount    = 10,  colCount   = 10;
+           var colorCount  = 2,   index      = 0;
+     
+           var shapes=[], colors = ["#f00", "#00f"];
+     
+           for(var row=0; row<rowCount; row++) {
+             for(var col=0; col<colCount; col++) {
+                currentX = basePointX+col*rectWidth;
+                currentY = basePointY+row*rectHeight;
+
+                index = row+col;
+                shapes.push({cx:currentX,  cy:currentY, 
+                             rx:rectWidth, ry:rectHeight, 
+                             fill:colors[index%colors.length]});
+             }
+           }
+
+           return shapes;
+         },
+         render : function() {
+           this.shapes = this.getShapes();
+         }
+     })
+   })();
+  </script>
+

@@ -1,0 +1,80 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<polymer-element name="svg-graphics" attributes="width height">
+ <template>
+   <style>
+     :host { display:block; }
+     .slice { } 
+   </style>
+
+   <svg id="svg" width="{{width}}" height="{{height}}"> 
+      <template repeat="{{shape in shapes}}">
+        <rect x="{{shape.x}}"      y="{{shape.y}}" 
+              width="{{shape.rw}}" height="{{shape.rh}}" 
+              style="fill:{{shape.fill}}"/>
+      </template>
+    </svg>
+  </template>
+
+  <script>
+     (function() {
+       Polymer('svg-graphics',{
+         colors : null,
+         shapes : null,
+         observe : {
+           width : 'render'
+         },
+         getShapes : function() {
+         var basePointX  = 20,  basePointY  = 20;
+         var currentX    = 0,   currentY    = 0;
+         var rectWidth   = 400, rectHeight  = 400;
+         var moduloWidth = 50,  moduloCount = 0;
+         var color       = "",  shapes      = [];
+         var stripCount  = 10,  stripWidth  = 0;
+         var currStrip   = 0;
+
+         var rVal       = 0.0; 
+         var gVal       = 0.0; 
+         var bVal       = 0.0; 
+       
+         stripWidth  = Math.floor(rectWidth/stripCount); 
+         moduloCount = Math.floor(rectWidth/moduloWidth); 
+
+         for(var x=0; x<rectWidth; x++) {
+           currentX = basePointX+x;
+           currentY = basePointY+x;
+          
+           rVal = 0.0; gVal = 0.0; bVal = 0.0; 
+       
+           currStrip = Math.floor(x/stripWidth);
+           if(currStrip % 4 == 0) {
+              rVal = Math.floor(255*(x % stripWidth)/stripWidth);
+           } 
+           else if(currStrip % 4 == 1) {
+              rVal = Math.floor(255*(x % stripWidth)/stripWidth);
+              gVal = Math.floor(255*(x % stripWidth)/stripWidth);
+           } 
+           else if(currStrip % 4 == 2) {
+              gVal = 255-Math.floor(255*(x % stripWidth)/stripWidth);
+           } 
+           else {
+              bVal = 255-Math.floor(255*(x % stripWidth)/stripWidth);
+           } 
+   
+           var color = "rgb("+rVal+","+gVal+","+bVal+")";
+
+           shapes.push({x:currentX,       y:currentY, 
+                      //rw:rectWidth-0*x, rh:rectWidth-0*x, 
+                        rw:3*(x%moduloWidth), rh:3*(x%moduloWidth), 
+                        fill:color});
+           }
+
+           return shapes;
+         },
+         render : function() {
+           this.shapes = this.getShapes();
+         }
+     })
+   })();
+</script>
+
