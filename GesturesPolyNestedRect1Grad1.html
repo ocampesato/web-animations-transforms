@@ -29,30 +29,30 @@
            width : 'render'
          },
          getShapes : function() {
-         var basePointX = 50,  basePointY = 50;
-         var currentX   = 0,   currentY   = 0;
-         var rectWidth  = 300, rectHeight = 300;
-         var color      = "",  shapes     = [];
-
-         var rVal       = 0.0; 
-         var gVal       = 0.0; 
-         var bVal       = 0.0; 
-       
-         for(var x=0; x<rectWidth/2; x++) {
-           currentX = basePointX+x;
-           currentY = basePointY+x;
-       
-           rVal = 255-Math.floor(255*x/(rectWidth/2));
-           rVal = Math.floor(255*x/(rectWidth/2));
-           var color = "rgb("+rVal+","+gVal+","+bVal+")";
-
-           shapes.push({x:currentX,       y:currentY, 
-                      //rw:rectWidth-2*x, rh:rectWidth-2*x, 
-                        rw:rectWidth-0*x, rh:rectWidth-0*x, 
-                        fill:color});
-           }
-
-           return shapes;
+           var basePointX = 50,  basePointY = 50;
+           var currentX   = 0,   currentY   = 0;
+           var rectWidth  = 300, rectHeight = 300;
+           var color      = "",  shapes     = [];
+  
+           var rVal       = 0.0; 
+           var gVal       = 0.0; 
+           var bVal       = 0.0; 
+         
+           for(var x=0; x<rectWidth/2; x++) {
+             currentX = basePointX+x;
+             currentY = basePointY+x;
+         
+             rVal = 255-Math.floor(255*x/(rectWidth/2));
+             rVal = Math.floor(255*x/(rectWidth/2));
+             var color = "rgb("+rVal+","+gVal+","+bVal+")";
+  
+             shapes.push({x:currentX,       y:currentY, 
+                        //rw:rectWidth-2*x, rh:rectWidth-2*x, 
+                          rw:rectWidth-0*x, rh:rectWidth-0*x, 
+                          fill:color});
+             }
+  
+             return shapes;
          },
          render : function() {
            this.shapes = this.getShapes();
